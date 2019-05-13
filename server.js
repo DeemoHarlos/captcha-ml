@@ -9,9 +9,8 @@ var text = []
 var index = 0
 
 function getText() {
-	var input = fs.readFileSync('label.csv').toString()
-	var items = input.split('\n')
-	text = items.map(x=>x.split(' ')[1])
+	var input = fs.readFileSync('temp.csv').toString()
+	text = input.split('\n')
 }
 
 getText()
@@ -32,25 +31,25 @@ app.post('/:id',(req,res)=>{
 	res.status(200)
 	res.end()
 	console.log('POST')
-	var index = Number(req.params.id)
-	text[index] = req.body.text
-	var outputBuffer = new Buffer(text.map((x,i)=>i+' '+x).join('\n'))
-	fs.writeFileSync('label.csv', outputBuffer)
+	var id = Number(req.params.id)
+	text[id] = req.body.text
+	var outputBuffer = Buffer.from(text.join('\n'))
+	fs.writeFileSync('temp.csv', outputBuffer)
 })
 
-app.get('/',(req,res,err)=>{
+app.get('/',(req,res)=>{
 	getText()
-	console.log(text[2])
 	console.log('GET')
 	var i = 0
-	while(text[index]!=''&&index<2068) {
+	while(text[index]!=''&&text[index]!='\r') {
 		i++
 		index ++
-		if (i>2068) break
+		index %= 3000
+		if (i>=3000) break
 	}
 	res.status(200).send(index+'')
 	index ++
-	index %= 2068
+	index %= 3000
 })
 
 app.listen(port,()=>{
