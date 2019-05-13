@@ -1,0 +1,6 @@
+cnn_model.hdf5
+dependencies/
+logs/
+*.zip
+selenium_log.txt
+node_modules
