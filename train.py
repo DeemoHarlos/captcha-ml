@@ -8,6 +8,7 @@ from keras.layers import Input, Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.layers.normalization import BatchNormalization
 from keras.utils  import np_utils
 from keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
+from keras import optimizers
 import csv
 
 dic = {'a':0,'b':1,'c':2,'d':3,'e':4,'f':5,'g':6,'h':7,'i':8,'j':9,'k':10,'l':11,'m':12,'n':13,'o':14,'p':15,'q':16,'r':17,'s':18,'t':19,'u':20,'v':21,'w':22,'x':23,'y':24,'z':25,' ':26}
@@ -66,7 +67,8 @@ tensor_out = [Dense(27, name='digit1', activation='softmax')(tensor_out),\
               Dense(27, name='digit4', activation='softmax')(tensor_out)]
 
 model = Model(inputs=tensor_in, outputs=tensor_out)
-model.compile(loss='categorical_crossentropy', optimizer='Adamax', metrics=['accuracy'])
+sgd = optimizers.SGD(lr=0.0001, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 model.summary()
               
 print("Reading training data...")
@@ -103,7 +105,7 @@ checkpoint = ModelCheckpoint(filepath, monitor='val_digit4_acc', verbose=1, save
 earlystop = EarlyStopping(monitor='val_loss', patience=8, verbose=1, mode='auto')
 tensorBoard = TensorBoard(log_dir = './logs', histogram_freq = 1)
 callbacks_list = [tensorBoard, earlystop, checkpoint]
-model.fit(train_data, train_label, batch_size=10, epochs=20, verbose=2, validation_data=(vali_data, vali_label), callbacks=callbacks_list)
+model.fit(train_data, train_label, batch_size=50, epochs=20, verbose=2, validation_data=(vali_data, vali_label), callbacks=callbacks_list)
 #.fit(train_data, train_label, validation_split=0.2, batch_size=50, epochs=20, verbose=2, callbacks=callbacks_list)
 # tensorboard --logdir= (dist)
 

@@ -41,7 +41,7 @@ print('model loading...')
 model = load_model('./cnn_model.hdf5')
 
 
-test_num = 2068 #test number
+test_num = 2000 #test number
 
 print("Reading data...")
 x_train = np.stack([np.array(Image.open("./test_img/" + str(index) + ".png"))/255.0 for index in range(0, test_num, 1)])

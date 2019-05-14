@@ -4,3 +4,5 @@ logs/
 *.zip
 selenium_log.txt
 node_modules
+*.log
+temp.csv
