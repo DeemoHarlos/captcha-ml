@@ -5,21 +5,29 @@ var app = express()
 var port = 8787
 var test = true
 var csv = []
-var num = 20000
+var wrong = []
+var num = 0
 
 var index = 0
 var check = 0
 
 function getCsv() {
 	var input = fs.readFileSync('temp.csv').toString()
-	line = input.split('\n')
-	csv = line.map(x=>{
+	csv = input.split('\n')
+}
+
+function getWrong() {
+	var input = fs.readFileSync('wrong.csv').toString()
+	var line = input.split('\n')
+	wrong = line.map(x=>{
 		var arr = x.split(' ')
 		return {'text':arr[0],'checked':Number(arr[1])}
 	})
+	num = wrong.length
 }
 
 getCsv()
+getWrong()
 
 
 if (test) {
@@ -36,13 +44,13 @@ app.enable('trust proxy')
 app.get('/',(req,res)=>{
 	console.log('GET')
 	var i = 0
-	while(csv[index].checked>check) {
+	while(wrong[index].checked>check) {
 		i++
 		index ++
 		index %= num
 		if (i>= num) check ++
 	}
-	res.status(200).send(index+' '+csv[index].text)
+	res.status(200).send(wrong[index].text+' '+csv[wrong[index].text])
 	index ++
 	index %= num
 })
@@ -53,9 +61,8 @@ app.post('/:id',(req,res)=>{
 	console.log('POST')
 	var id = Number(req.params.id)
 	var newAns = req.body.text
-	if (csv[id].text == newAns) csv[id].checked ++
-	else csv[id].text = newAns
-	var outputBuffer = Buffer.from(csv.map(x=>x.text+' '+x.checked).join('\n'))
+	csv[id] = newAns
+	var outputBuffer = Buffer.from(csv.join('\n'))
 	fs.writeFileSync('temp.csv', outputBuffer)
 })
 

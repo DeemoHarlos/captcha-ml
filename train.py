@@ -109,7 +109,7 @@ filepath='./cnn_model.hdf5'
 model.save(filepath)
 print('training new model...')
 
-checkpoint = ModelCheckpoint(filepath, monitor='val_digit4_acc', verbose=1, save_best_only=True, mode='max')
+checkpoint = ModelCheckpoint(filepath, monitor='val_digit3_acc', verbose=1, save_best_only=True, mode='max')
 earlystop = EarlyStopping(monitor='val_loss', patience=8, verbose=1, mode='auto')
 tensorBoard = TensorBoard(log_dir = './logs', histogram_freq = 1)
 callbacks_list = [tensorBoard, earlystop, checkpoint]

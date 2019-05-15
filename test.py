@@ -1,14 +1,20 @@
-from PIL import Image, ImageDraw, ImageFont
-import sys
 import numpy as np
+import csv
 
-#np.set_printoptions(threshold=sys.maxsize)
+csv1 = open('./label1.csv', 'r', encoding = 'utf8')
+label1 = [row[0] for row in csv.reader(csv1)]
 
-def trans_image(image):
-    a = np.array(image.convert("L"))
-    b = np.array([np.array([(1 if (x - 193>0) else 0) for x in y]) for y in a])
-    return b
+csv2 = open('./label2.csv', 'r', encoding = 'utf8')
+label2 = [row[0] for row in csv.reader(csv2)]
 
-train_data = np.stack([trans_image(Image.open("./test_img/" + str(index) + ".png")) for index in range(0, 3, 1)])
+wrong = open('./wrong.csv', 'w+', encoding = 'utf8')
 
-print(train_data)
+index = 0
+for label in label1:
+	if label != label2[index]:
+		wrong.write(str(index) + '\n')
+	index += 1
+
+csv1.close()
+csv2.close()
+wrong.close()

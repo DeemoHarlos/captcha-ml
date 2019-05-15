@@ -43,26 +43,26 @@ def trans_image(image):
     return b
 
 print('model loading...')
-model = load_model('./cnn_model_FONT22500.hdf5')
+model = load_model('./cnn_model_FONTX22500.hdf5')
 
 print("Reading data...")
-x_train = np.stack([trans_image(Image.open("./unlabeled_img_real/" + str(index) + ".png")) for index in range(3000, 20000 , 1)])
+x_train = np.stack([trans_image(Image.open("./train_img_real/" + str(index) + ".png")) for index in range(0, 20000 , 1)])
 
 print('predict start')
 tStart = time.time()#計時開始
 
 prediction = model.predict(x_train)
 print('predicted ')
-resultlist = ["" for _ in range(17000)]
+resultlist = ["" for _ in range(20000)]
 
 for predict in prediction:
-    for index in range(17000):
+    for index in range(20000):
         resultlist[index] += to_text2(np.argmax(predict[index]))
 
 tEnd = time.time()#計時結束
 
 
-predict_csv = open('./unlabeled_label_real.csv', 'w+', encoding = 'utf8')
+predict_csv = open('./label2.csv', 'w+', encoding = 'utf8')
 
 for result in resultlist:
     predict_csv.write(result + '\n')

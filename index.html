@@ -32,7 +32,7 @@ req.onreadystatechange = function () {
 			var data = req.response.split(' ')
 			var index = Number(data[0])
 			$('#img').attr('src',server+':'+staticPort+'/ml/train_img_real/'+index+'.png')
-			$('#index').apnd(index+' / 2999')
+			$('#index').apnd(index+' / 20000')
 			$('#text').value = data[1]
 
 			$('#button').$e('click',(e)=>{
