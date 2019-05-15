@@ -1,8 +1,12 @@
 cnn_model.hdf5
+__pycache__
 dependencies/
 logs/
 *.zip
 selenium_log.txt
 node_modules
 *.log
-temp.csv
+*_img_*
+*_label_*
+*.csv
+captcha*

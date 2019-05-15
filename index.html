@@ -18,34 +18,38 @@ body, input {text-align: center;font-size: 8vw;line-height: 1.25em;}
 
 		</style>
 		<script type="text/javascript">
+var server = 'http://140.112.211.69'
+var staticPort = 3000
+var serverPort = 8787
 var req = new XMLHttpRequest()
-var server = 'http://140.112.211.69:8787/'
-req.open('GET',server)
+req.open('GET',server+':'+serverPort)
 req.setRequestHeader('Content-Type','application/X-www-form-urlencoded')
 req.send()
 req.onreadystatechange = function () {
 	if(req.readyState === XMLHttpRequest.DONE){
-		console.log(server + ' responded with status ' + req.status)
+		console.log(server+':'+serverPort + ' responded with status ' + req.status)
 		if(req.status>=200 && req.status<400){
-			var index = Number(req.response)
-			$('#img').attr('src','http://140.112.211.69:3000/ml/test_img/'+index+'.png')
+			var data = req.response.split(' ')
+			var index = Number(data[0])
+			$('#img').attr('src',server+':'+staticPort+'/ml/train_img_real/'+index+'.png')
 			$('#index').apnd(index+' / 2999')
+			$('#text').value = data[1]
 
 			$('#button').$e('click',(e)=>{
-				if(!$('#text').value.match(/^[A-z][A-z]{1,2}[A-z]$/)) {
-					$('#caption').apnd('請輸入 3 ~ 4 位小寫英文字母！')
+				if(!$('#text').value.match(/^[A-z][A-z]{2}[A-z]$/)) {
+					$('#caption').apnd('請輸入 4 位小寫英文字母！')
 					return
 				}
 				var req = new XMLHttpRequest()
-				var server = 'http://140.112.211.69:8787/'
-				req.open('POST',server+index)
+				req.open('POST',server+':'+serverPort+'/'+index)
 				req.setRequestHeader('Content-Type','application/X-www-form-urlencoded')
-				req.send('text='+$('#text').value.toLowerCase().padEnd(4,' '))
+				req.send('text='+$('#text').value.toLowerCase())
 				req.onreadystatechange = function () {
 					if(req.readyState === XMLHttpRequest.DONE){
-						console.log(server + ' responded with status ' + req.status)
+						console.log(server+':'+serverPort + ' responded with status ' + req.status)
 						$('#caption').apnd('輸入成功！')
 						$('#button').remove()
+						location.reload()
 					}
 				}
 			})
