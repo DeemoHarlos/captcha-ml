@@ -61,9 +61,12 @@ app.post('/:id',(req,res)=>{
 	console.log('POST')
 	var id = Number(req.params.id)
 	var newAns = req.body.text
+	wrong.find(x=>x.text==id).checked ++
 	csv[id] = newAns
 	var outputBuffer = Buffer.from(csv.join('\n'))
 	fs.writeFileSync('temp.csv', outputBuffer)
+	outputBuffer = Buffer.from(wrong.map(x=>x.text+' '+x.checked).join('\n'))
+	fs.writeFileSync('wrong.csv', outputBuffer)
 })
 
 app.listen(port,()=>{
